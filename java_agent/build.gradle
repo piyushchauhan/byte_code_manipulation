@@ -1,0 +1,51 @@
+plugins {
+  id 'com.github.johnrengelman.shadow' version '8.1.1'
+  id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.javassist:javassist:3.27.0-GA'
+    implementation 'net.bytebuddy:byte-buddy:1.14.12'
+    implementation 'net.bytebuddy:byte-buddy-agent:1.14.12'
+
+}
+
+
+// jar {
+//     archiveFileName = "my_agent.jar"
+//     manifest {
+//         attributes(
+//             'Manifest-Version': '1.0',
+//                 'Premain-Class': 'org.foo.Agent',
+//                 'Agent-Class': 'org.foo.Agent',
+//                 'Can-Redefine-Classes': 'true',
+//                 'Can-Retransform-Classes': 'true',
+//                 'Can-Set-Native-Method-Prefix': 'true',
+//                 'Implementation-Title': "org.foo.ClassLogger",
+//                 'Implementation-Version': rootProject.version
+//         )
+//     }
+// }
+
+shadowJar {
+    archiveBaseName.set('my_agent')
+   archiveClassifier.set('')
+   archiveVersion.set('')
+    manifest {
+        attributes(
+            'Manifest-Version': '1.0',
+                'Premain-Class': 'org.foo.Agent',
+                'Agent-Class': 'org.foo.Agent',
+                'Can-Redefine-Classes': 'true',
+                'Can-Retransform-Classes': 'true',
+                'Can-Set-Native-Method-Prefix': 'true',
+                'Implementation-Title': "org.foo.ClassLogger",
+                'Multi-Release': 'true',
+                'Implementation-Version': rootProject.version,
+        )
+    }
+}
