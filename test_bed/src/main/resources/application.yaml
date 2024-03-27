@@ -1,0 +1,14 @@
+url: https://worldtimeapi.org/api/timezone/Asia/Kolkata
+spring:
+  datasource:
+    url: ${PG_URL:jdbc:postgresql://localhost:5432/hyper_test?autoReconnect=true&createDatabaseIfNotExist=true}
+    username: ${PG_USERNAME:postgres}
+    password: ${PG_PASSWORD:postgres}
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      properties:
+        hibernate:
+          format_sql: true

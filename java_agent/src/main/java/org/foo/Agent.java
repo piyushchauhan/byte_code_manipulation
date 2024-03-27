@@ -6,8 +6,6 @@ import java.lang.instrument.Instrumentation;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 
-import org.foo.Agent.HttpMonitoringInterceptor;
-
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.agent.builder.AgentBuilder;
@@ -26,13 +24,6 @@ public class Agent {
 
         String className = "org.example.Rest";
         transformClass(className, inst);
-    }
-
-    public static class HttpMonitoringInterceptor {
-        @Advice.OnMethodEnter
-        public static void enter(@Advice.Origin MethodDescription method) {
-            System.out.println("Outgoing HTTP call detected in: " + method.getName());
-        }
     }
 
     public static void agentmain(String args, Instrumentation inst) {

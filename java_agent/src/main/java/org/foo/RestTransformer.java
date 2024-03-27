@@ -1,21 +1,10 @@
 package org.foo;
 
 import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.asm.Advice;
-import net.bytebuddy.asm.Advice.AllArguments;
+import net.bytebuddy.dynamic.DynamicType.Builder.MethodDefinition.ImplementationDefinition;
+import net.bytebuddy.dynamic.DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition;
 import net.bytebuddy.dynamic.loading.ClassReloadingStrategy;
-import net.bytebuddy.implementation.FixedValue;
-import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.MethodDelegation;
-import net.bytebuddy.implementation.bind.annotation.RuntimeType;
-import net.bytebuddy.implementation.bind.annotation.SuperCall;
-import net.bytebuddy.implementation.bytecode.assign.Assigner;
-
-import net.bytebuddy.matcher.ElementMatchers;
-import net.bytebuddy.utility.Invoker;
-
-import java.util.concurrent.Callable;
-
 import org.foo.rest.LoggerRest;
 import org.foo.rest.MockerRest;
 
@@ -52,27 +41,18 @@ public class RestTransformer implements ClassFileTransformer {
             LOGGER.info("Inside " + className + ".transform()");
             try {
                 Class<?> clazz = Class.forName(className.replace('/', '.'));
-                // var id =
                 String mode = System.getenv("HT_MODE");
-                if (mode == "RECORD") {
-                    return new ByteBuddy()
-                            .redefine(clazz)
-                            .method(named("sayHello"))
-                            .intercept(MethodDelegation.to(LoggerRest.class))
-                            .make()
-                            .load(clazz.getClassLoader(),
-                                    ClassReloadingStrategy
-                                            .fromInstalledAgent(ClassReloadingStrategy.Strategy.REDEFINITION))
-                            .getBytes();
-                }
-                return new ByteBuddy()
-                        .redefine(clazz)
-                        .method(named("sayHello"))
-                        .intercept(MethodDelegation.to(MockerRest.class))
+                ImplementationDefinition method = new ByteBuddy().redefine(clazz).method(named("sayHello"));
+                ReceiverTypeDefinition methodDefinition;
+                // if (mode == "RECORD") {
+                    methodDefinition = method.intercept(MethodDelegation.to(LoggerRest.class));
+                // } else {
+                //     methodDefinition = method.intercept(MethodDelegation.to(MockerRest.class));
+                // }
+                return methodDefinition
                         .make()
                         .load(clazz.getClassLoader(),
-                                ClassReloadingStrategy
-                                        .fromInstalledAgent(ClassReloadingStrategy.Strategy.REDEFINITION))
+                                ClassReloadingStrategy.fromInstalledAgent(ClassReloadingStrategy.Strategy.REDEFINITION))
                         .getBytes();
 
             } catch (Exception e) {
@@ -81,7 +61,5 @@ public class RestTransformer implements ClassFileTransformer {
             }
         }
         return byteCode;
-
     }
-
 }
