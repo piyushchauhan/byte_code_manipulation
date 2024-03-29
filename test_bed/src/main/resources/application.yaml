@@ -1,10 +1,12 @@
-url: https://worldtimeapi.org/api/timezone/Asia/Kolkata
+mode: ${HT_MODE:RECORD}
+url: ${API:https://worldtimeapi.org/api/timezone/Asia/Kolkata}
 spring:
   datasource:
     url: ${PG_URL:jdbc:postgresql://localhost:5432/hyper_test?autoReconnect=true&createDatabaseIfNotExist=true}
     username: ${PG_USERNAME:postgres}
     password: ${PG_PASSWORD:postgres}
   jpa:
+    database-platform: org.hibernate.dialect.PostgresPlusDialect
     show-sql: true
     generate-ddl: true
     hibernate:

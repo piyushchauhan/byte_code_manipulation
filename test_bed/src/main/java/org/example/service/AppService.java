@@ -18,8 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 public class AppService {
     @Value("${url}")
     private String url;
+
     @Autowired
     RestClient restClient;
+    
     @Autowired
     PostRepository postRepository;
 
@@ -27,6 +29,7 @@ public class AppService {
         Map<String, Object> response = new HashMap<>();
         CompletableFuture<Object> restFuture = CompletableFuture.supplyAsync(() -> {
             try {
+                log.info("API_URL: " + url);  
                 return restClient.getData(url);
             } catch (Exception e) {
                 e.printStackTrace();

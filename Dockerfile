@@ -8,5 +8,7 @@ COPY java_agent /app/java_agent
 COPY test_bed /app/test_bed
 COPY entrypoint.sh /app
 
+EXPOSE 8080
+
 # run entrypoint.sh
 ENTRYPOINT ["sh", "entrypoint.sh"]
