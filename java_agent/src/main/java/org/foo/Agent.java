@@ -18,6 +18,12 @@ import java.util.concurrent.Callable;
 
 public class Agent {
     public static void premain(String args, Instrumentation inst) {
+        if (isClassInClasspath("org.example.Rest")) {
+            System.out.println("Class is in classpath");
+        } else {
+            System.out.println("Class is not in classpath");
+        }
+
         ByteBuddyAgent.install();
         LOGGER.info("In premain method");
         LOGGER.info("Mode:" + System.getenv("HT_MODE"));
@@ -68,6 +74,15 @@ public class Agent {
         } catch (Exception ex) {
             throw new RuntimeException(
                     "Transform failed for: [" + clazz.getName() + "]", ex);
+        }
+    }
+
+    public static boolean isClassInClasspath(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
         }
     }
 }

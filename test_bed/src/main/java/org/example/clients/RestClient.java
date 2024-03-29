@@ -17,8 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class RestClient {
 
+    @SuppressWarnings("unchecked")
     public Map<String, ?> getData(String url) throws IOException {
-        log.info("URL: " + url);  
         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
